@@ -226,7 +226,7 @@ inline void FranUtils::FranVector<_T>::Insert(const _T& _objToInsert, size_t _po
 template <class _T>
 void FranUtils::FranVector<_T>::PopIndex(size_t _index)
 {
-	if (baseArraySize > 0 || _index >= baseArraySize)
+	if (baseArraySize < 1 || _index >= baseArraySize)
 		throw std::out_of_range("PopIndex: Out Of Range!!");
 
 	_T* tempArray = new _T[baseArraySize - 1];
