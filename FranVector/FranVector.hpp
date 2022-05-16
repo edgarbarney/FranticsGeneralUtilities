@@ -40,8 +40,11 @@ namespace FranUtils
 		const _T* end() const { return &baseArrayData[baseArraySize]; }
 
 		// ==========
-		// Modifier Functions
+		// Functions
 		// ==========
+
+		// Size of the vector AKA. Number of elements.
+		_T* Data();
 
 		// Add an element at the end of the Vector
 		void Append(const _T& _objToAppend);
@@ -177,6 +180,12 @@ bool FranUtils::FranVector<_T>::operator==(const FranVector<_T>& _other)
 			return false;
 
 	return true;
+}
+
+template <class _T>
+_T* FranUtils::FranVector<_T>::Data()
+{
+	return baseArrayData;
 }
 
 template <class _T>
