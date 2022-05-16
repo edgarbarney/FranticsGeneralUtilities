@@ -148,8 +148,12 @@ template <class _T>
 _T& FranUtils::FranVector<_T>::operator[](size_t _index) const
 {
 	if (_index >= baseArraySize)
-		throw std::out_of_range("Subscript: Out Of Range!!");
-
+	// throw std::out_of_range("Subscript: Out Of Range!!");
+	{
+		static_assert(false, "Subscript: Out Of Range!!");
+		Insert(T(), _index);
+	}
+		
 	return baseArrayData[_index];
 }
 
