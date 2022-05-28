@@ -30,14 +30,14 @@ namespace FranUtils
 			// We'll fill the shorter string with leading zeroes
 
 			// Allocate new strings
-			char* str1 = new char[greatestLen+1];
-			char* str2 = new char[greatestLen+1];
+			char* str1 = new char[greatestLen + 1];
+			char* str2 = new char[greatestLen + 1];
 
 			int iter = 0;
 			const char* iterchr = _str1;
 			const char* iterchr2 = _str2;
 
-			while(*iterchr != '\0')
+			while (*iterchr != '\0')
 			{
 				if (greatestLen == str1len)
 				{
@@ -79,6 +79,7 @@ namespace FranUtils
 				else
 					left = 0;
 
+				// Append digit
 				tempCharDigit = (tempDigitAdd % 10) /* Ones */ + '0';
 				std::strncat(_out, &tempCharDigit, 1);
 
@@ -106,7 +107,66 @@ namespace FranUtils
 				_out[finalStrLen - i - 1] = tempChar;
 			}
 		}
-	}
-}
+	};
+};
+
+#ifdef _STRING_
+
+#include <iomanip>
+#include <sstream>
+
+namespace FranUtils
+{
+	// Cursed String Maths for Standard Strings.
+	namespace StringMaths
+	{
+		inline std::string Add(std::string _str1, std::string _str2)
+		{
+			std::string finalStr = "";
+
+			uint8_t left = 0;
+			uint8_t tempDigitAdd = 0;
+
+			std::string* bigStrPtr = std::max(_str1.size(), _str2.size()) == _str1.size() ? &_str1 : &_str2;
+			std::string* smolStrPtr = std::max(_str1.size(), _str2.size()) == _str1.size() ? &_str2 : &_str1;
+
+			// Add leading zeroes to the "smaller" string
+			std::ostringstream ss;
+			ss << std::setw(std::max(_str1.size(), _str2.size())) << std::setfill('0') << *smolStrPtr;
+			*smolStrPtr = ss.str();
+
+			// Reverse both strings
+			std::reverse(_str1.begin(), _str1.end());
+			std::reverse(_str2.begin(), _str2.end());
+
+			for (size_t i = 0; i < _str1.size(); i++)
+			{
+				tempDigitAdd = left + (_str1[i] - '0') + (_str2[i] - '0');
+
+				if (tempDigitAdd >= 10)
+					left = (tempDigitAdd % 100) / 10; /* Tens */
+				else
+					left = 0;
+
+				// Prepend digit
+				finalStr.insert(0, 1, (tempDigitAdd % 10) /* Ones */ + '0');
+
+				// Reset Temp Vars except left
+				tempDigitAdd = 0;
+			}
+
+			// Add last left digit if any
+			if (left != 0)
+			{
+				finalStr.insert(0, 1, left + '0');
+			}
+
+			return finalStr;
+		}
+	};
+};
+
+#endif
+
 
 //#endif
