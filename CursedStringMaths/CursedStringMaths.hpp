@@ -325,8 +325,6 @@ namespace FranUtils
 			uint8_t left = 0;
 			uint8_t tempDigitMult = 0;
 
-			std::string resultaddend1;
-
 			std::string* bigStrPtr = std::max(GetDigitCount(_str1), GetDigitCount(_str2)) == GetDigitCount(_str1) ? &_str1 : &_str2;
 			std::string* smolStrPtr = std::max(GetDigitCount(_str1), GetDigitCount(_str2)) == GetDigitCount(_str1) ? &_str2 : &_str1;
 
