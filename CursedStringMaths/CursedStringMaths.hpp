@@ -46,8 +46,12 @@ namespace FranUtils
 
 		// Operations
 
-		inline std::string Subtract(std::string _str1, std::string _str2);
+		//_str1 + _str2
 		inline std::string Add(std::string _str1, std::string _str2);
+		//_str1 - _str2
+		inline std::string Subtract(std::string _str1, std::string _str2);
+		//_str1 * _str2
+		inline std::string Multiply(std::string _str1, std::string _str2);
 
 		// ============
 		// Definitions
@@ -309,6 +313,75 @@ namespace FranUtils
 
 			// Add sign if needed then return
 			return isPositive ? finalStr : finalStr.insert(0, 1, negativeChar);
+		}
+
+		std::string Multiply(std::string _str1, std::string _str2)
+		{
+			bool isPositive = IsPositive(_str1) == IsPositive(_str2);
+
+			AbsoluteRef(_str1);
+			AbsoluteRef(_str2);
+
+			uint8_t left = 0;
+			uint8_t tempDigitMult = 0;
+
+			std::string resultaddend1;
+
+			std::string* bigStrPtr = std::max(GetDigitCount(_str1), GetDigitCount(_str2)) == GetDigitCount(_str1) ? &_str1 : &_str2;
+			std::string* smolStrPtr = std::max(GetDigitCount(_str1), GetDigitCount(_str2)) == GetDigitCount(_str1) ? &_str2 : &_str1;
+
+			// Add leading zeroes to the "smaller" string
+			std::ostringstream ss;
+			ss << std::setw(std::max(GetDigitCount(_str1), GetDigitCount(_str2))) << std::setfill('0') << *smolStrPtr;
+			*smolStrPtr = ss.str();
+
+			// Reverse both strings
+			std::reverse(_str1.begin(), _str1.end());
+			std::reverse(_str2.begin(), _str2.end());
+
+			// std::vector???
+			std::string* addends = new std::string[GetDigitCount(_str1)];
+
+			for (size_t i = 0; i < GetDigitCount(_str2); i++) // Multiplicator Digits
+			{
+				// Append X zeroes for allignment
+				addends[i].insert(0, i, '0');
+
+				for (size_t k = 0; k < GetDigitCount(_str1); k++) // Multiplicand Digits
+				{
+					tempDigitMult = left + ((_str1[k] - '0') * (_str2[i] - '0'));
+
+					if (tempDigitMult >= 10)
+						left = (tempDigitMult % 100) / 10; /* Tens */
+					else
+						left = 0;
+
+					// Prepend digit
+					addends[i].insert(0, 1, (tempDigitMult % 10) /* Ones */ + '0');
+
+					// Last left digit if any
+					if (k == GetDigitCount(_str1) - 1 && left != 0)
+						addends[i].insert(0, 1, left + '0');
+
+					// Reset Temp Vars except left
+					tempDigitMult = 0;
+				}
+			}
+
+			std::string finalResult = "0";
+
+			for (size_t i = 0; i < GetDigitCount(_str1); i++)
+			{
+				finalResult = Add(finalResult, addends[i]);
+			}
+
+			delete[] addends;
+
+			// Remove leading zeroes
+			finalResult.erase(0, std::min(finalResult.find_first_not_of('0'), finalResult.size() - 1));
+
+			// Add sign if needed then return
+			return isPositive ? finalResult : finalResult.insert(0, 1, negativeChar);
 		}
 	};
 };
