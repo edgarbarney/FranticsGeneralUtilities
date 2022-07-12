@@ -164,9 +164,13 @@ void FranUtils::FranVector<_T>::operator=(const FranVector<_T>& _other)
 {
 	Clear();
 
-	// TODO: Optimise
-	for (size_t i = 0; i < _other.baseArraySize; ++i)
-		Append(_other.baseArrayData[i]);
+	baseArrayData = new _T[_other.baseArraySize];
+
+	baseArraySize = _other.baseArraySize;
+
+	// Copy other data into the current array
+	for (size_t i = 0; i < baseArraySize; ++i)
+		baseArrayData[i] = _other.baseArrayData[i];
 }
 
 template<class _T>
