@@ -17,6 +17,7 @@ namespace FranUtils
 
 	public:
 		FranVector();
+		FranVector(const std::initializer_list<_T>& _data);
 		FranVector(const FranVector& _other);
 		~FranVector();
 
@@ -132,9 +133,20 @@ FranUtils::FranVector<_T>::FranVector()
 	baseArrayData = nullptr;
 }
 
+template<class _T>
+inline FranUtils::FranVector<_T>::FranVector(const std::initializer_list<_T>& _data)
+{
+	// TODO: Optimise
+	for (const auto& elem : _data)
+	{
+		Append(elem);
+	}
+}
+
 template <class _T>
 FranUtils::FranVector<_T>::FranVector(const FranVector& _other)
 {
+	// TODO: Optimise
 	baseArraySize = 0;
 
 	for (size_t i = 0; i < _other.baseArraySize; ++i)
